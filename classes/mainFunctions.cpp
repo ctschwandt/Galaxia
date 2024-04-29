@@ -135,19 +135,19 @@ void main_menu(Surface & surface, Event & event, Game & game, KeyPressed & keypr
     int key_delay = 0;
     int option = PLAY;
 
+    static bool i_want_bluey = false;
+
     //==========================
     // bluey flies along screen
     //==========================
     static BlueAlien bluey(surface);
-    static bool blueys_bool = true;
-    if (blueys_bool)
+    if (i_want_bluey)
     {
         bluey.is_alive() = true;
         bluey.dx() = SPEED - 4;
         bluey.dy() = 0;
         bluey.x() = 0 - bluey.w() - 60;
         bluey.y() = title_rect.y - title_rect.h - 20;
-        blueys_bool = false;
     }
     
     while (game.state() == MENU)
@@ -193,10 +193,10 @@ void main_menu(Surface & surface, Event & event, Game & game, KeyPressed & keypr
         if (key_delay == 0 && (keypressed[ESC]))
             game.state() = EXIT;
 
-        //=================
-        // bluey flies!!!
-        //=================
-        if (bluey.is_alive())
+        // //=================
+        // // bluey flies!!!
+        // //=================
+        if (i_want_bluey && bluey.is_alive())
         {
             bluey.x() += bluey.dx();
 
@@ -236,7 +236,8 @@ void main_menu(Surface & surface, Event & event, Game & game, KeyPressed & keypr
                 break;
         }
 
-        surface.put_image(bluey.image(), bluey.rect());
+        if (i_want_bluey)
+            surface.put_image(bluey.image(), bluey.rect());
         
         surface.unlock();
         surface.flip();

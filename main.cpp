@@ -93,7 +93,7 @@ int main()
                 gameover(surface, event, game, keypressed, galaxy, hud);
                 break;
             default:
-                main_menu(surface, event, game, keypressed, galaxy, hud);
+                game.state() = MENU;
                 break;
         }
     }
