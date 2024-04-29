@@ -91,6 +91,11 @@ void RedAlien::update(std::vector < Laser > & lasers, const bool can_attack, Pla
                 //     target_pos().get_x() = player.x();
                 //     target_pos().get_y() = player.y();
                 //     target_velocity();
+                //     break;
+                case ARC:
+                    state() = ARC;
+                    theta() = 0;
+                    dir() = (x() < player.x() ? 1 : -1);
                     break;
                 default:
                     break;
@@ -99,6 +104,7 @@ void RedAlien::update(std::vector < Laser > & lasers, const bool can_attack, Pla
         else if (mother_ship()->is_alive() && mother_ship()->in_attack_mode())
         {
             state() = mother_ship()->state();
+            theta() = 0;
         }
     }
     else if (state() == SIN)
@@ -110,18 +116,6 @@ void RedAlien::update(std::vector < Laser > & lasers, const bool can_attack, Pla
         else
         {
             sin_velocity();
-        }
-        fire_laser(lasers);
-    }
-    else if (state() == DROP)
-    {
-        if (mother_ship()->is_alive() && mother_ship()->state() == state())
-        {
-            velocity() = mother_ship()->velocity();
-        }
-        else
-        {
-            drop_velocity();
         }
         fire_laser(lasers);
     }
@@ -137,6 +131,38 @@ void RedAlien::update(std::vector < Laser > & lasers, const bool can_attack, Pla
             state() = FORMATION;
             laser_count() = 0;
         }    
+    }
+    else if (state() == DROP)
+    {
+        if (mother_ship()->is_alive() && mother_ship()->state() == state())
+        {
+            velocity() = mother_ship()->velocity();
+        }
+        else
+        {
+            drop_velocity();
+        }
+        fire_laser(lasers);
+    }
+    else if (state() == ARC)
+    {
+        if (mother_ship()->is_alive() && mother_ship()->state() == state())
+        {
+            velocity() = mother_ship()->velocity();
+        }
+        else
+        {
+            arc_velocity();
+            if (theta() < PI / 2)
+            {
+                arc_velocity();
+            }
+            else
+            {
+                laser_count() = ALIEN_LASER_COUNT;
+                state() = DROP;
+            }
+        }
     }
     else if (in_drift_mode())
     {

@@ -29,6 +29,8 @@ enum ALIENSTATE
     DROP,
     // TARGET,
     IM_A_FIRIN_MY_LASER,
+    ARC,
+    NUM_ATTACKS,
     DRIFT,
     SPAWNING,
     SPAWNED
@@ -42,7 +44,7 @@ public:
           int state = FORMATION, int attack_delay = 0, int points = 0, int laser_count = 0, bool fired = false)
         : GameObject(surface, rect, {dx, dy}, is_alive, id), state_(state), attack_delay_(attack_delay), points_(points),
           laser_count_(laser_count), fired_(fired),
-          home_(GameObject(surface))
+          home_(GameObject(surface)), theta_(0)
     {}
     virtual ~Alien() {}
      //====================================================//
@@ -62,12 +64,16 @@ public:
     GameObject home() const { return home_; }
     vec2i & spawn_pos() { return spawn_pos_; }
     vec2i spawn_pos() const { return spawn_pos_; }
-    vec2i & target_pos() { return target_pos_; }
-    vec2i target_pos() const { return target_pos_; }
     int & spawn_x() { return spawn_pos_.get_x(); }
     int spawn_x() const { return spawn_pos_.get_x(); }
     int & spawn_y() { return spawn_pos_.get_y(); }
     int spawn_y() const { return spawn_pos_.get_y(); }
+    vec2i & target_pos() { return target_pos_; }
+    vec2i target_pos() const { return target_pos_; }
+    float & theta() { return theta_; }
+    float theta() const { return theta_; }
+    int & dir() { return dir_; }
+    int dir() const { return dir_; }
     static int & attack_rate() { return attack_rate_; }
     static int & d_aggression() { return d_aggression_; }
     //=====================================================//
@@ -87,6 +93,7 @@ public:
     void fire_laser(std::vector < Laser > &);
     void formation_velocity();
     void sin_velocity();
+    void arc_velocity();
     void drop_velocity();
     void target_velocity();
     void drift_velocity();
@@ -104,6 +111,8 @@ protected:
     GameObject home_;
     vec2i spawn_pos_;
     vec2i target_pos_;
+    float theta_;
+    int dir_;
     static int attack_rate_;
     static int d_aggression_;
 };
@@ -152,7 +161,7 @@ bool Alien::in_formation_mode()
 inline
 bool Alien::in_attack_mode()
 {
-    return (SIN <= state() && state() <= DROP);
+    return (SIN <= state() && state() < NUM_ATTACKS);
 }
 
 inline
@@ -232,6 +241,15 @@ void Alien::drop_velocity()
 //     dy() = abs(unit_y * SPEED); 
     
 // }
+
+inline
+void Alien::arc_velocity()
+{
+    dx() = (SPEED + 1) * sin(theta()) * dir();
+    dy() = (SPEED + 1) * cos(theta());
+
+    theta() += 0.01f;
+}
 
 inline
 void Alien::drift_velocity()
@@ -341,6 +359,11 @@ void Alien::update(std::vector < Laser > & lasers, const bool can_attack, Player
                 //     target_pos().get_x() = player.x();
                 //     target_pos().get_y() = player.y();
                 //     break;
+                case ARC:
+                    state() = ARC;
+                    theta() = 0;
+                    dir() = (x() < player.x() ? 1 : -1);
+                    break;
                 default:
                     break;
             }
@@ -367,6 +390,18 @@ void Alien::update(std::vector < Laser > & lasers, const bool can_attack, Player
         {
             state() = FORMATION;
             laser_count() = 0;
+        }
+    }
+    else if (state() == ARC)
+    {
+        if (theta() < PI / 2)
+        {
+            arc_velocity();
+        }
+        else
+        {
+            laser_count() = ALIEN_LASER_COUNT;
+            state() = DROP;
         }
     }
     else if (in_drift_mode())
@@ -396,7 +431,6 @@ void Alien::update(std::vector < Laser > & lasers, const bool can_attack, Player
         {
             state() = FORMATION;
             home().dx() = SPEED;
-            //std::cout << "state is " << state() << std::endl;
             return_home();
             x() += home().dx();
         }
@@ -406,7 +440,7 @@ void Alien::update(std::vector < Laser > & lasers, const bool can_attack, Player
     {
         state() = DRIFT;
         laser_count() = 0;
-        // place(home().x(), 0);
+        theta() = PI / 2;
         place(home().x(), spawn_y());
     }
 }

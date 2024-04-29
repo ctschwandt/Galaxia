@@ -60,7 +60,7 @@ const int YELLOW_BOTTOM_ROW_Y = RED_BOTTOM_ROW_Y - ALIEN_HEIGHT;
 
 // fleet
 /* const int ALIEN_COUNT = BLUE_NUM_ROWS * BLUE_NUM_PER_ROW + PURPLE_NUM_PER_ROW; // + RED_COUNT + YELLOW_COUNT; */
-const int ATTACK_PER_SECOND = 37;
+const int ATTACK_PER_SECOND = 60;
 const int ATTACK_RATE = FRAME_RATE * ATTACK_PER_SECOND;
 const int SPAWN_OFFSET = ALIEN_HEIGHT * 14;
 
@@ -72,5 +72,8 @@ const int FALLING_SPEED = 3;
 
 // hud
 const int BOTTOM_OFFSET = 51;
+
+// misc
+const float PI = 3.14159;
 
 #endif
