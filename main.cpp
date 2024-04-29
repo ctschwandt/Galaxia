@@ -81,8 +81,11 @@ int main()
                 play(surface, event, game, keypressed, galaxy, hud,
                      player, lasers, explosions, fleet);
                 break;
-            case RULES:
-                break;
+            /// TO DO
+            // case HIGHSCORE:
+            //     break;
+            // case RULES:
+            //     break;
             case EXIT:
                 return 0;
                 break;
@@ -90,6 +93,7 @@ int main()
                 gameover(surface, event, game, keypressed, galaxy, hud);
                 break;
             default:
+                main_menu(surface, event, game, keypressed, galaxy, hud);
                 break;
         }
     }
