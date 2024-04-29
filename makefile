@@ -4,6 +4,9 @@ exe:	main.cpp
 asan:	main.cpp
 	g++ -g -fsanitize=address main.cpp src/*.cpp src/*.c classes/*.cpp `sdl-config --cflags --libs` -lSDL_image -lSDL_mixer -lSDL_ttf -Iincludes -Iclasses -o Galaxia
 
+leak:	main.cpp
+	g++ -g -fsanitize=leak main.cpp src/*.cpp src/*.c classes/*.cpp `sdl-config --cflags --libs` -lSDL_image -lSDL_mixer -lSDL_ttf -Iincludes -Iclasses -o Galaxia
+
 run:
 	./Galaxia
 

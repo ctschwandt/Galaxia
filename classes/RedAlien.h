@@ -33,10 +33,7 @@ class RedAlien: public Alien
              int state = 0, int attack_delay = 0, int points = 100)
         : Alien(surface, rect, dx, dy, is_alive, REDS, state, attack_delay, points)
     {}
-    ~RedAlien()
-    {
-        //delete mothership_;
-    }
+    ~RedAlien() {}
     //====================================================//
     
     //================ getters and setters ================//

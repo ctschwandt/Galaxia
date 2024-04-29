@@ -19,11 +19,10 @@ public:
               int state = 0, int attack_delay = 0, int points = 60)
         : Alien(surface, rect, dx, dy, is_alive, BLUES, state, attack_delay, points)
     {}
+    ~BlueAlien() {}
      //====================================================//
     
     //================ getters and setters ================//
-    //virtual int & id() { return id_; }
-    //virtual int id() const { return id_; }
     static Image & image() { return image_; }
     //=====================================================//
 

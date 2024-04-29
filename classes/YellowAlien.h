@@ -34,6 +34,7 @@ class YellowAlien: public Alien
                 int state = 0, int attack_delay = 0, int points = 200)
         : Alien(surface, rect, dx, dy, is_alive, YELLOWS, state, attack_delay, points)
     {}
+    virtual ~YellowAlien() {}
     //====================================================//
     
     //================ getters and setters ================//
@@ -51,10 +52,6 @@ class YellowAlien: public Alien
     //=====================================================//
     
   private:
-
-    //std::vector < Alien * > children_;
-    // instead of pointers to children,
-    // the children should point to their mommy
     
     static Image image_;
 };

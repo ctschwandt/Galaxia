@@ -38,11 +38,7 @@ public:
     {
         count() = 1;
     }
-    ~Fleet()
-    {
-        // delete left_most();
-        // delete right_most();
-    }
+    ~Fleet() {}
      //====================================================//
 
     //================ getters and setters ================//

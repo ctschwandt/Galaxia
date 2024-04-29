@@ -29,7 +29,6 @@
 #include "Explosion.h"
 #include "Star.h"
 #include "HUD.h"
-#include "Quotes.h"
 
 void main_menu(Surface & surface, Event & event, Game & game, KeyPressed & keypressed, Galaxy & galaxy, HUD & hud)
 {   
@@ -446,8 +445,21 @@ void gameover(Surface & surface, Event & event, Game & game, KeyPressed & keypre
 
     int quote = rand() % NUM_QUOTES;
     bool played = false;
-    
-    while (game.state() == GAMEOVER)
+
+    Uint8 r = 0, g = 0, b = 0; // colors used for Elif fade in
+
+    static Font title_font("fonts/Dune_Rise.ttf", 100);
+    static Font text_font("fonts/FreeSansBold.ttf", 39);
+    static Font name_font("fonts/FreeSansOblique.ttf", 39);
+      
+    Image title(title_font.render("GAME OVER", CYAN));
+    Rect title_rect = title.getRect();
+    title_rect.y = H / 2 - (title_rect.h / 2) - 100;
+    title_rect.x = W / 2 - (title_rect.w / 2);
+
+    int count = 0;
+    game.gameplay_music().stop();
+    while (count < 590) //game.state() == GAMEOVER)
     {
         if (event.poll() && event.type() == QUIT)
         {
@@ -456,21 +468,6 @@ void gameover(Surface & surface, Event & event, Game & game, KeyPressed & keypre
         }
         if (keypressed[TAB]) continue;
 
-        static Font title_font("fonts/Dune_Rise.ttf", 100);
-        static Font text_font("fonts/FreeSansBold.ttf", 39);
-        static Font name_font("fonts/FreeSansOblique.ttf", 39);
-      
-        Image title(title_font.render("GAME OVER", CYAN));
-        Rect title_rect = title.getRect();
-        title_rect.y = H / 2 - (title_rect.h / 2) - 100;
-        title_rect.x = W / 2 - (title_rect.w / 2);
-       
-        if (event.poll() && event.type() == QUIT)
-        {
-            game.state() = MENU;
-            break;
-        }
-
         int start = getTicks();
        
         //============
@@ -478,86 +475,88 @@ void gameover(Surface & surface, Event & event, Game & game, KeyPressed & keypre
         //============
         surface.lock();
         surface.fill(BLACK);
-        quote = ELIF;
         surface.put_image(title, title_rect);
 
         //=================================
         // initialize quote and sound
         //=================================
-        switch (quote)
-        {
-            //================================
-            // COLBY / ICE_T
-            //================================
-            case COLBY:
-                static Image ice_t0(text_font.render("\"Don't hate the player.", WHITE));
-                static Image ice_t1(text_font.render("Hate the game.\"", WHITE)); 
-                static Image ice_t2(name_font.render("  - Ice T.", WHITE));
+            switch (quote)
+            {
+                //================================
+                // COLBY / ICE_T
+                //================================
+                case COLBY:
+                    static Image ice_t0(text_font.render("\"Don't hate the player.", WHITE));
+                    static Image ice_t1(text_font.render("Hate the game.\"", WHITE)); 
+                    static Image ice_t2(name_font.render("  - Ice T.", WHITE));
 
-                static Rect ice_r0(ice_t0.getRect());
-                static Rect ice_r1(ice_t1.getRect());
-                static Rect ice_r2(ice_t2.getRect());
+                    static Rect ice_r0(ice_t0.getRect());
+                    static Rect ice_r1(ice_t1.getRect());
+                    static Rect ice_r2(ice_t2.getRect());
 
-                static Sound ice_t("sounds/ice_t.wav");
+                    static Sound ice_t("sounds/ice_t.wav");
                 
-                ice_r0.x = ice_r1.x = ice_r2.x = title_rect.x + TEXT_OFFSET;
+                    ice_r0.x = ice_r1.x = ice_r2.x = title_rect.x + TEXT_OFFSET;
 
-                ice_r0.y = title_rect.y + title_rect.h + TEXT_OFFSET;
-                ice_r1.y = ice_r0.y + ice_r0.h + TEXT_OFFSET;
-                ice_r2.y = ice_r1.y + ice_r1.h + TEXT_OFFSET;
+                    ice_r0.y = title_rect.y + title_rect.h + TEXT_OFFSET;
+                    ice_r1.y = ice_r0.y + ice_r0.h + TEXT_OFFSET;
+                    ice_r2.y = ice_r1.y + ice_r1.h + TEXT_OFFSET;
 
-                surface.put_image(ice_t0, ice_r0);
-                surface.put_image(ice_t1, ice_r1);
-                surface.put_image(ice_t2, ice_r2);
+                    surface.put_image(ice_t0, ice_r0);
+                    surface.put_image(ice_t1, ice_r1);
+                    surface.put_image(ice_t2, ice_r2);
 
-                if (!played)
-                {
-                    ice_t.play();
-                    played = true;
-                }
-                break;
-            //=================================
-            // ELIF / Bediüzzaman Said Nursi // Thanks Elif :D
-            //=================================
-            case ELIF:      
-                // turkish
-                static Image elif0_i("images/quotes/elif0.png");
-                static Rect elif0_r(elif0_i.getRect());
-                elif0_r.x = title_rect.x - 5;
-                elif0_r.y = title_rect.y + title_rect.h + TEXT_OFFSET;
-                static Sound elif0("sounds/ice_t.wav");
+                    if (!played)
+                    {
+                        ice_t.play();
+                        played = true;
+                    }
+                    break;
+                //=================================
+                // ELIF / Bediüzzaman Said Nursi
+                //=================================
+                case ELIF:      
+                    //=========== turkish ===========//
+                    static Image elif0_i("images/quotes/elif0.png");
+                    static Rect elif0_r(elif0_i.getRect());
+                    elif0_r.x = title_rect.x - 5;
+                    elif0_r.y = title_rect.y + title_rect.h + TEXT_OFFSET;
+                    static Sound elif0("sounds/elif.wav");
                 
-                if (!played)
-                {
-                    elif0.play();
-                    played = true;
-                }
+                    if (!played)
+                    {
+                        elif0.play();
+                        played = true;
+                    }
 
-                surface.put_image(elif0_i, elif0_r);
+                    surface.put_image(elif0_i, elif0_r);
+                           
+                    //=========== english ===========//
+                    if (r < 250 && count > 259) // increment color till reaches white
+                        r = g = b = b + 2;
+                    
+
+                    Color elif_color = {r, g, b};
+                    
+                    Image elif1_t0(text_font.render("\"Every winter has its spring,", elif_color));
+                    Image elif1_t1(text_font.render("every night has its morning.\"", elif_color)); 
+                    Image elif1_t2(name_font.render("  - Queen Elif :D", elif_color));           
+
+                    static Rect elif1_r0(elif1_t0.getRect());
+                    static Rect elif1_r1(elif1_t1.getRect());
+                    static Rect elif1_r2(elif1_t2.getRect());
                 
-                //english
-                static Image elif1_t0(text_font.render("\"Every winter has its spring,", WHITE));
-                static Image elif1_t1(text_font.render("every night has its morning.\"", WHITE)); 
-                static Image elif1_t2(name_font.render("  - Queen Elif :D", WHITE));
+                    elif1_r0.x = elif1_r1.x = elif1_r2.x = elif0_r.x; // elif0_r.x + elif0_r.w + TEXT_OFFSET + 10;
 
-                static Rect elif1_r0(elif1_t0.getRect());
-                static Rect elif1_r1(elif1_t1.getRect());
-                static Rect elif1_r2(elif1_t2.getRect());
-                
-                elif1_r0.x = elif1_r1.x = elif1_r2.x = elif0_r.x; // elif0_r.x + elif0_r.w + TEXT_OFFSET + 10;
+                    elif1_r0.y = elif0_r.y + elif0_r.h + TEXT_OFFSET; //title_rect.y + title_rect.h + TEXT_OFFSET;
+                    elif1_r1.y = elif1_r0.y + elif1_r0.h + TEXT_OFFSET;
+                    elif1_r2.y = elif1_r1.y + elif1_r1.h + TEXT_OFFSET;
 
-                elif1_r0.y = elif0_r.y + elif0_r.h + TEXT_OFFSET; //title_rect.y + title_rect.h + TEXT_OFFSET;
-                elif1_r1.y = elif1_r0.y + elif1_r0.h + TEXT_OFFSET;
-                elif1_r2.y = elif1_r1.y + elif1_r1.h + TEXT_OFFSET;
-
-                surface.put_image(elif1_t0, elif1_r0);
-                surface.put_image(elif1_t1, elif1_r1);
-                surface.put_image(elif1_t2, elif1_r2);
-                ///========================================
-
-               
-                break;
-        }
+                    surface.put_image(elif1_t0, elif1_r0);
+                    surface.put_image(elif1_t1, elif1_r1);
+                    surface.put_image(elif1_t2, elif1_r2);        
+                    break;
+            }
         
         surface.unlock();
         surface.flip();
@@ -566,12 +565,9 @@ void gameover(Surface & surface, Event & event, Game & game, KeyPressed & keypre
         int dt = RATE - end + start;
         if (dt > 0) delay(dt);
 
-        game.gameplay_music().stop();
-
-        delay(5000);
-        game.state() = MENU;
+        ++count;
     }
-    
+
     game.state() = MENU;
     return;              
 }

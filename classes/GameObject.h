@@ -43,7 +43,7 @@ public:
             id() = other.id();
         }
     }
-    ~GameObject() {}
+    virtual ~GameObject() {}
     //======================================//
                
     //================ getters and setters ================//

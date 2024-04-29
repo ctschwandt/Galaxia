@@ -44,11 +44,10 @@ public:
           laser_count_(laser_count), fired_(fired),
           home_(GameObject(surface))
     {}
+    virtual ~Alien() {}
      //====================================================//
     
     //================ getters and setters ================//
-    //virtual int & id() { return id_; }
-    //virtual int id() const { return id_; }
     int & state() { return state_; }
     int state() const { return state_; }
     int & laser_count() { return laser_count_; }
