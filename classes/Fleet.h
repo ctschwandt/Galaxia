@@ -179,6 +179,9 @@ void Fleet::revive_all()
         aliens()[i]->is_alive() = true;
         aliens()[i]->state() = SPAWNING;
     }
+    purple_can_attack() = false;
+    red_can_attack() = false;
+    yellow_can_attack() = false;
 }
 
 inline
@@ -199,11 +202,13 @@ void Fleet::update_can_attack()
         if (!(aliens()[i]->is_alive()))
         {
             if(aliens()[i]->home().y() == BLUE_BOTTOM_ROW_Y)
-            {                
+            {
+                std::cout << "purple cam" << std::endl;
                 purple_can_attack() = true;
             }
             if(aliens()[i]->home().y() == PURPLE_BOTTOM_ROW_Y)
             {
+                std::cout << "red " << std::endl;
                 red_can_attack() = true;
                 yellow_can_attack() = true;
             }

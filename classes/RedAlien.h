@@ -152,7 +152,6 @@ void RedAlien::update(std::vector < Laser > & lasers, const bool can_attack, Pla
         }
         else
         {
-            arc_velocity();
             if (theta() < PI / 2)
             {
                 arc_velocity();
