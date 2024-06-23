@@ -203,12 +203,10 @@ void Fleet::update_can_attack()
         {
             if(aliens()[i]->home().y() == BLUE_BOTTOM_ROW_Y)
             {
-                std::cout << "purple cam" << std::endl;
                 purple_can_attack() = true;
             }
             if(aliens()[i]->home().y() == PURPLE_BOTTOM_ROW_Y)
             {
-                std::cout << "red " << std::endl;
                 red_can_attack() = true;
                 yellow_can_attack() = true;
             }
